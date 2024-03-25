@@ -16,12 +16,16 @@ type C1 = new(wings: number) => Duck;
 type C2 = {
     new(wings: number): Duck;
 }
+interface C3 {
+    new(wings: number): Duck;
+}
 
 type IsSameConstructor1 = Identity<C1, C2>; // true
-type IsSameConstructor2 = Identity<C1, C2>; // true
+type IsSameConstructor2 = Identity<C1, C3>; // true
 
 // Compatible shape
 type OneArgFn  = (a: number) => boolean;
 type TwoArgsFn = (b: number, s: string) => boolean;
 
 type Compatible = OneArgFn extends TwoArgsFn ? true : false; // true
+type Compatible2 = TwoArgsFn extends OneArgFn ? true : false; // false

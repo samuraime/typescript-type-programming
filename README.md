@@ -49,7 +49,7 @@ type Fruit = keyof typeof fruitMap;
 ```
 
 - 来自 JavaScript 世界的都至少可以作为 Value
-- 很多的类型身兼两职。
+- 很多的类型身兼两职
     - 来自 JavaScript 世界的各种 Primitives 的字面量
     - 来自 TypeScript 世界的新玩意 `enum`
     - Classes 在作为值和类型时没有不像别的类型那么直观
@@ -116,15 +116,19 @@ type C1 = new(wings: number) => Duck;
 type C2 = {
     new(wings: number): Duck;
 }
+interface C3 {
+    new(wings: number): Duck;
+}
 
-type IsSameConstructor1 = Identity<C1, C2>;
-type IsSameConstructor2 = Identity<C1, C2>;
+type IsSameConstructor1 = Identity<C1, C2>; // true
+type IsSameConstructor2 = Identity<C1, C3>; // true
 
 // Compatible shape
 type OneArgFn  = (a: number) => boolean;
 type TwoArgsFn = (b: number, s: string) => boolean;
 
-type Compatible = OneArgFn extends TwoArgsFn ? true : false;
+type Compatible = OneArgFn extends TwoArgsFn ? true : false; // true
+type Compatible2 = TwoArgsFn extends OneArgFn ? true : false; // false，e.g. 一个只提供一个参数的调用的消费方，是无法给第二个参数的。
 ```
 
 Note: 这里引入了一个工具函数 `Identity<A, B>` 来判断它们是否为共轭父子，即等价。
@@ -163,6 +167,11 @@ type Animal = Duck | Dragon;
 ```
 
 Union 是更强大的 Enum 替代。
+
+
+```ts
+type T = {a: number} | {b: string} & {c: boolean}
+```
 
 ### 整理一下可能的操作
 
@@ -267,7 +276,7 @@ type Params = MyParameters<TestFn>; // [a: string, b: number]
 | Control Structures | `A extends B ? C : D` `A extends Array<infer T> ? T : unknown` |
 | Functions | `type GenericType<T extends string = ''> = T & U` |
 
-[React里类型操作的小练习](snippets/type-programming-exercise.ts)
+[React里类型操作的小练习](snippets/type-programming-exercise.ts)，实现 `type Props = React.React.ComponentProps<Component>`
 
 ## References
 
